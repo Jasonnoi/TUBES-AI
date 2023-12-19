@@ -19,10 +19,7 @@ public class Minesweeper {
         int boardSize = sc.nextInt();
         Hashtable<Integer, Integer> inputBoard = new Hashtable<>();
         inputBoard = inputBoardValue(inputBoard, boardSize);
-        Set<Integer> arr = inputBoard.keySet();
-        for (int index : arr) {
-            System.out.println(index);
-        }
+        Set<Integer> arrIndexValue = inputBoard.keySet();
         // Create an instance of the Genetic class
         Genetic genetic = new Genetic(boardSize);
 
@@ -33,7 +30,10 @@ public class Minesweeper {
         System.out.println("Initial Population:");
         for (BoardState boardState : initialPopulation) {
             boardState.printBoard();
+            genetic.countFitnessKromosom(boardState, inputBoard, arrIndexValue);
+            System.out.println("Score kromosom : " + boardState.getFitness());
             System.out.println();
+            // 
         }
     }
 }

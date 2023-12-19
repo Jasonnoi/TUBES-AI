@@ -1,4 +1,7 @@
+import java.util.Hashtable;
 import java.util.Random;
+import java.util.Set;
+// import java.lang.Math;
 
 public class Genetic {
     private static final int POPULATION_SIZE = 10;
@@ -30,4 +33,36 @@ public class Genetic {
         return boardState;
     }
 
+    //menghitung ftsness dari setiap angka yg diketahui pada board
+    //dengan cara menghitung jumlah "kotak hitam" disekitar angka tsb termasuk dirinya
+    //lalu dibagi dengan angka tsb
+    private float countFitnessValue(Hashtable<Integer, Integer> inputBoard, int index, BoardState kromosom) {
+        float hasil = -1;
+        int valueIndex = inputBoard.get(index);
+
+        int self = kromosom.getSelf(index);
+        int left = kromosom.getLeft(index);
+        int right = kromosom.getRight(index);
+        int top = kromosom.getTop(index);
+        int bottom = kromosom.getBottom(index);
+        int bottomLeft = kromosom.getBottomLeft(index);
+        int bottomRight = kromosom.getBottomRight(index);
+        int topLeft = kromosom.getTopLeft(index);
+        int topRight = kromosom.getTopRight(index);
+
+        int sum = self + left + right + top + bottom + bottomLeft + bottomRight + topLeft + topRight;
+
+        if (sum <= valueIndex) {
+            hasil = (float) sum/valueIndex;
+        }
+        return hasil;
+    }
+
+    public void countFitnessKromosom(BoardState kromosom, Hashtable<Integer, Integer> inputBoard, Set<Integer> setOfIndexInput){
+        float scoreKromosom = 0;
+        for (int index : setOfIndexInput) {
+            scoreKromosom += countFitnessValue(inputBoard, index, kromosom);
+        }
+        kromosom.setFitness(scoreKromosom);
+    }
 }
