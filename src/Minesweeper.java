@@ -36,10 +36,10 @@ public class Minesweeper {
         }
 
         System.out.println("Rank Selection Result: ");
-        BoardState[] selectedPopulation = genetic.tournamentSelection(initialPopulation, 2);
+        BoardState[] selectedPopulation = genetic.rankSelection(initialPopulation, 2);
 
         // Print the selected population after tournament selection
-        System.out.println("Selected Population after Tournament Selection:");
+        System.out.println("Selected Population after Rank Selection:");
         for (BoardState boardState : selectedPopulation) {
             System.out.println("Score kromosom : " + boardState.getFitness());
             System.out.println();

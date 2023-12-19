@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.Set;
@@ -66,6 +67,24 @@ public class Genetic {
         kromosom.setFitness(scoreKromosom);
     }
 
+    public BoardState[] rankSelection(BoardState[] population, int numSelections) {
+        int populationSize = population.length;
+        BoardState[] selectedPopulation = new BoardState[numSelections];
+        Random random = new Random();
+
+        // Sort the population based on fitness
+        Arrays.sort(population, (a, b) -> Double.compare(b.getFitness(), a.getFitness()));
+
+        // Perform rank selection
+        for (int i = 0; i < numSelections; i++) {
+            // Randomly select an individual based on its rank
+            double randomValue = random.nextDouble();
+            int selectedIndex = (int) (randomValue * populationSize);
+            selectedPopulation[i] = population[selectedIndex];
+        }
+
+        return selectedPopulation;
+    }
     public BoardState[] tournamentSelection(BoardState[] population, int numSelections) {
         int populationSize = population.length;
         BoardState[] selectedPopulation = new BoardState[numSelections];
