@@ -28,10 +28,10 @@ public class Genetic {
             int index = random.nextInt(25);
             boardState.setCell(index, 1);
         }
-        System.out.println();
 
         return boardState;
     }
+
 
     //menghitung ftsness dari setiap angka yg diketahui pada board
     //dengan cara menghitung jumlah "kotak hitam" disekitar angka tsb termasuk dirinya
@@ -64,5 +64,26 @@ public class Genetic {
             scoreKromosom += countFitnessValue(inputBoard, index, kromosom);
         }
         kromosom.setFitness(scoreKromosom);
+    }
+
+    public BoardState[] tournamentSelection(BoardState[] population, int numSelections) {
+        int populationSize = population.length;
+        BoardState[] selectedPopulation = new BoardState[numSelections];
+        Random random = new Random();
+
+        for (int i = 0; i < numSelections; i++) {
+            // Randomly select individuals for two tournament groups
+            int indexGroup1 = random.nextInt(populationSize);
+            int indexGroup2 = random.nextInt(populationSize);
+
+            // Choose the individual with the higher fitness score
+            if (population[indexGroup1].getFitness() > population[indexGroup2].getFitness()) {
+                selectedPopulation[i] = population[indexGroup1];
+            } else {
+                selectedPopulation[i] = population[indexGroup2];
+            }
+        }
+
+        return selectedPopulation;
     }
 }
