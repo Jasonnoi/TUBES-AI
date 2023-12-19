@@ -1,6 +1,7 @@
 public class BoardState {
     private int boardSize;
     private int[] board;
+    private float fitness;
 
     // ------ constructor ----------
     public BoardState(int boardSize) {
@@ -13,8 +14,17 @@ public class BoardState {
         board[index] = value;
 
     }
-    // GET SELF
 
+    public void setFitness(float fitness) {
+        this.fitness = fitness;
+    }
+
+    public float getFitness() {
+        return fitness;
+    }
+    
+    // GET SELF
+    
     public int getSelf(int index) {
         return this.board[index - 1];
     }
