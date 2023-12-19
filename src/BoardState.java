@@ -2,6 +2,7 @@ public class BoardState {
     private int boardSize;
     private int[] board;
     private float fitness;
+    private double fitnessProbability; // New field for probability
 
     // ------ constructor ----------
     public BoardState(int boardSize) {
@@ -23,6 +24,15 @@ public class BoardState {
         return fitness;
     }
     
+    // Setter for fitness probability
+    public void setFitnessProbability(double probability) {
+        this.fitnessProbability = probability;
+    }
+
+    // Getter for fitness probability
+    public double getFitnessProbability() {
+        return fitnessProbability;
+    }
     // GET SELF
     
     public int getSelf(int index) {

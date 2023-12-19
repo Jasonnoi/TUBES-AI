@@ -25,22 +25,18 @@ public class Minesweeper {
         Genetic genetic = new Genetic(boardSize);
 
         // Get the initial population of BoardState objects
-        BoardState[] initialPopulation = genetic.initializePopulation();
+        BoardState[] population = genetic.initializePopulation();
 
         // Print the initial population
-        System.out.println("Initial Population:");
-        for (BoardState boardState : initialPopulation) {
+        for (BoardState boardState : population) {
             genetic.countFitnessKromosom(boardState, inputBoard, arrIndexValue);
-            System.out.println("Score kromosom : " + boardState.getFitness());
-            System.out.println();
         }
 
-        System.out.println("Rank Selection Result: ");
-        BoardState[] selectedPopulation = genetic.rankSelection(initialPopulation, 2);
-
+        BoardState[] selectedPopulation = genetic.rankSelection(population, 2);
+        System.out.println();
         // Print the selected population after tournament selection
-        System.out.println("Selected Population after Rank Selection:");
         for (BoardState boardState : selectedPopulation) {
+            boardState.printBoard();
             System.out.println("Score kromosom : " + boardState.getFitness());
             System.out.println();
         }

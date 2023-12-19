@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.Set;
@@ -64,7 +63,12 @@ public class Genetic {
         for (int index : setOfIndexInput) {
             scoreKromosom += countFitnessValue(inputBoard, index, kromosom);
         }
-        kromosom.setFitness(scoreKromosom);
+        if (scoreKromosom < 0) {
+            kromosom.setFitness(0);
+        } else {
+
+            kromosom.setFitness(scoreKromosom);
+        }
     }
 
     public BoardState[] rankSelection(BoardState[] population, int numSelections) {
@@ -72,19 +76,35 @@ public class Genetic {
         BoardState[] selectedPopulation = new BoardState[numSelections];
         Random random = new Random();
 
-        // Sort the population based on fitness
-        Arrays.sort(population, (a, b) -> Double.compare(b.getFitness(), a.getFitness()));
+        // Assign probabilities based on rank and fitness
+        double totalFitness = 0.0;
+        for (int i = 0; i < populationSize; i++) {
+            totalFitness += population[i].getFitness();
+        }
+
+        for (int i = 0; i < populationSize; i++) {
+            double probability = population[i].getFitness() / totalFitness;
+            population[i].setFitnessProbability(probability);
+        }
 
         // Perform rank selection
         for (int i = 0; i < numSelections; i++) {
-            // Randomly select an individual based on its rank
             double randomValue = random.nextDouble();
-            int selectedIndex = (int) (randomValue * populationSize);
-            selectedPopulation[i] = population[selectedIndex];
+            double cumulativeProbability = 0.0;
+
+            for (int j = 0; j < populationSize; j++) {
+                cumulativeProbability += population[j].getFitnessProbability();
+
+                if (randomValue <= cumulativeProbability) {
+                    selectedPopulation[i] = population[j];
+                    break;
+                }
+            }
         }
 
         return selectedPopulation;
     }
+
     public BoardState[] tournamentSelection(BoardState[] population, int numSelections) {
         int populationSize = population.length;
         BoardState[] selectedPopulation = new BoardState[numSelections];
