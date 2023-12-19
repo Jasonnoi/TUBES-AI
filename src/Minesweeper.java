@@ -13,6 +13,7 @@ public class Minesweeper {
         return inputBoard;
     }
 
+
     public static void main(String[] args) {
         System.out.println("Hello, World!");
 
@@ -29,11 +30,20 @@ public class Minesweeper {
         // Print the initial population
         System.out.println("Initial Population:");
         for (BoardState boardState : initialPopulation) {
-            boardState.printBoard();
             genetic.countFitnessKromosom(boardState, inputBoard, arrIndexValue);
             System.out.println("Score kromosom : " + boardState.getFitness());
             System.out.println();
-            // 
         }
+
+        System.out.println("Rank Selection Result: ");
+        BoardState[] selectedPopulation = genetic.tournamentSelection(initialPopulation, 2);
+
+        // Print the selected population after tournament selection
+        System.out.println("Selected Population after Tournament Selection:");
+        for (BoardState boardState : selectedPopulation) {
+            System.out.println("Score kromosom : " + boardState.getFitness());
+            System.out.println();
+        }
+
     }
 }

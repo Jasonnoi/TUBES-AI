@@ -136,9 +136,11 @@ public class BoardState {
 
     // ------ method print isi board ----------
     public void printBoard() {
-        for (int i : this.board) {
-            System.out.print(i + " ");
+        for (int i = 0; i < this.boardSize; i++) {
+            for (int j = 0; j < this.boardSize; j++) {
+                System.out.print(board[i * this.boardSize + j] + " ");
+            }
+            System.out.println();
         }
-        System.out.println();
     }
 }
