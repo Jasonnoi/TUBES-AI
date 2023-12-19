@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.Set;
@@ -105,24 +106,52 @@ public class Genetic {
         return selectedPopulation;
     }
 
-    public BoardState[] tournamentSelection(BoardState[] population, int numSelections) {
-        int populationSize = population.length;
-        BoardState[] selectedPopulation = new BoardState[numSelections];
+    public void performCrossOver(int[] chromosome1, int[] chromosome2) {
+
+        System.out.println("Before Crossover:");
+        System.out.println(Arrays.toString(chromosome1));
+        System.out.println(Arrays.toString(chromosome2));
+
+        // Perform one-point crossover
+        int crossoverPoint = 12;
+        int[] child1 = Arrays.copyOf(chromosome1, chromosome1.length);
+        int[] child2 = Arrays.copyOf(chromosome2, chromosome2.length);
+        onePointCrossover(child1, child2, crossoverPoint);
+
+        System.out.println("\nAfter One-Point Crossover:");
+        System.out.println(Arrays.toString(child1));
+        System.out.println(Arrays.toString(child2));
+
+        // Store children in an array
+        int[][] childrenArray = new int[8][child1.length];
+
+        // Perform mutation for 8 children
         Random random = new Random();
-
-        for (int i = 0; i < numSelections; i++) {
-            // Randomly select individuals for two tournament groups
-            int indexGroup1 = random.nextInt(populationSize);
-            int indexGroup2 = random.nextInt(populationSize);
-
-            // Choose the individual with the higher fitness score
-            if (population[indexGroup1].getFitness() > population[indexGroup2].getFitness()) {
-                selectedPopulation[i] = population[indexGroup1];
-            } else {
-                selectedPopulation[i] = population[indexGroup2];
-            }
+        for (int i = 0; i < 8; i++) {
+            int[] newChild = Arrays.copyOf(i % 2 == 0 ? child1 : child2, child1.length);
+            mutate(newChild, random.nextInt(newChild.length));
+            childrenArray[i] = newChild;
         }
 
-        return selectedPopulation;
+        System.out.println("\nAfter Mutation for 8 Children:");
+        for (int i = 0; i < 8; i++) {
+            System.out.println(Arrays.toString(childrenArray[i]));
+        }
     }
+
+    // One-point crossover
+    public void onePointCrossover(int[] chromosome1, int[] chromosome2, int crossoverPoint) {
+        for (int i = crossoverPoint; i < chromosome1.length; i++) {
+            int temp = chromosome1[i];
+            chromosome1[i] = chromosome2[i];
+            chromosome2[i] = temp;
+        }
+    }
+
+    // Mutation
+
+    public void mutate(int[] chromosome, int index) {
+        chromosome[index] = 1 - chromosome[index];
+    }
+
 }

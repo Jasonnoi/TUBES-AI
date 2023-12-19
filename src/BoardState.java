@@ -16,6 +16,10 @@ public class BoardState {
 
     }
 
+    public int[] getBoard() {
+        return this.board;
+    }
+
     public void setFitness(float fitness) {
         this.fitness = fitness;
     }
