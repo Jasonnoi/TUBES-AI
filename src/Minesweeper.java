@@ -44,7 +44,13 @@ public class Minesweeper {
 
         int[] arr = selectedPopulation[0].getBoard();
         int[] arr2 = selectedPopulation[1].getBoard();
-        genetic.performCrossOver(arr, arr2);
+        BoardState[] secondGenartion = genetic.performCrossOver(arr, arr2);
+        for (BoardState state : secondGenartion) {
+            genetic.countFitnessKromosom(state, inputBoard, arrIndexValue);
+            state.printBoard();
+            System.out.println("TOTAL KROMOSOM POINT " + state.getFitness());
+            System.out.println();
+        }
 
     }
 }

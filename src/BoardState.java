@@ -16,6 +16,10 @@ public class BoardState {
 
     }
 
+    public void setBoard(int[] board) {
+        this.board = board;
+    }
+
     public int[] getBoard() {
         return this.board;
     }

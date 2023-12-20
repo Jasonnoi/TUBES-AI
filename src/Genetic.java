@@ -106,37 +106,40 @@ public class Genetic {
         return selectedPopulation;
     }
 
-    public void performCrossOver(int[] chromosome1, int[] chromosome2) {
+    public BoardState[] performCrossOver(int[] chromosome1, int[] chromosome2) {
 
-        System.out.println("Before Crossover:");
-        System.out.println(Arrays.toString(chromosome1));
-        System.out.println(Arrays.toString(chromosome2));
+
 
         // Perform one-point crossover
-        int crossoverPoint = 12;
-        int[] child1 = Arrays.copyOf(chromosome1, chromosome1.length);
-        int[] child2 = Arrays.copyOf(chromosome2, chromosome2.length);
-        onePointCrossover(child1, child2, crossoverPoint);
+        int crossoverPoint = (this.boardSize * this.boardSize) / 2;
 
-        System.out.println("\nAfter One-Point Crossover:");
-        System.out.println(Arrays.toString(child1));
-        System.out.println(Arrays.toString(child2));
+        onePointCrossover(chromosome1, chromosome2, crossoverPoint);
 
         // Store children in an array
-        int[][] childrenArray = new int[8][child1.length];
+        int[][] childrenArray = new int[8][chromosome1.length];
 
-        // Perform mutation for 8 children
+        // Per form mutation for 8 children
         Random random = new Random();
         for (int i = 0; i < 8; i++) {
-            int[] newChild = Arrays.copyOf(i % 2 == 0 ? child1 : child2, child1.length);
+            int[] newChild = Arrays.copyOf(i % 2 == 0 ? chromosome1 : chromosome2, chromosome1.length);
             mutate(newChild, random.nextInt(newChild.length));
             childrenArray[i] = newChild;
         }
 
-        System.out.println("\nAfter Mutation for 8 Children:");
+        BoardState[] newPop = new BoardState[POPULATION_SIZE];
+
         for (int i = 0; i < 8; i++) {
-            System.out.println(Arrays.toString(childrenArray[i]));
+            BoardState newState = new BoardState(this.boardSize);
+            newState.setBoard(childrenArray[i]);
+            newPop[i] = newState;
         }
+        BoardState parent = new BoardState(this.boardSize);
+        BoardState parent2 = new BoardState(this.boardSize);
+        parent.setBoard(chromosome1);
+        parent2.setBoard(chromosome2);
+        newPop[8] = parent;
+        newPop[9] = parent2;
+        return newPop;
     }
 
     // One-point crossover
