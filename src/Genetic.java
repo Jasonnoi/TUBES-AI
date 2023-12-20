@@ -38,7 +38,7 @@ public class Genetic {
     //dengan cara menghitung jumlah "kotak hitam" disekitar angka tsb termasuk dirinya
     //lalu dibagi dengan angka tsb
     private float countFitnessValue(Hashtable<Integer, Integer> inputBoard, int index, BoardState kromosom) {
-        float hasil = -1;
+        float hasil = 0.1f;
         int valueIndex = inputBoard.get(index);
 
         int self = kromosom.getSelf(index);
@@ -64,12 +64,7 @@ public class Genetic {
         for (int index : setOfIndexInput) {
             scoreKromosom += countFitnessValue(inputBoard, index, kromosom);
         }
-        if (scoreKromosom < 0) {
-            kromosom.setFitness(0);
-        } else {
-
-            kromosom.setFitness(scoreKromosom);
-        }
+        kromosom.setFitness(scoreKromosom);
     }
 
     public BoardState[] rankSelection(BoardState[] population, int numSelections) {
