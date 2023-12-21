@@ -37,7 +37,8 @@ public class Genetic {
     //menghitung ftsness dari setiap angka yg diketahui pada board
     //dengan cara menghitung jumlah "kotak hitam" disekitar angka tsb termasuk dirinya
     //lalu dibagi dengan angka tsb
-    private float countFitnessValue(Hashtable<Integer, Integer> inputBoard, int index, BoardState kromosom) {
+    private float countFitnessValue(Hashtable<Integer, Integer> inputBoard, int index, BoardState kromosom,
+            int optimum) {
         float hasil = 0.1f;
         int valueIndex = inputBoard.get(index);
 
@@ -51,20 +52,33 @@ public class Genetic {
         int topLeft = kromosom.getTopLeft(index);
         int topRight = kromosom.getTopRight(index);
 
-        int sum = self + left + right + top + bottom + bottomLeft + bottomRight + topLeft + topRight;
 
-        if (sum <= valueIndex) {
-            hasil = (float) sum/valueIndex;
+        int sum = self + left + right + top + bottom + bottomLeft + bottomRight + topLeft + topRight;
+        if (valueIndex == 0) {
+            if (sum == 0) {
+                hasil = 1;
+            }
+        } else if (valueIndex != 0 && sum <= valueIndex) {
+            if (sum == valueIndex) {
+                hasil = 1;
+
+            } else {
+
+                hasil = (float) sum / (float) valueIndex;
+            }
         }
         return hasil;
     }
 
-    public void countFitnessKromosom(BoardState kromosom, Hashtable<Integer, Integer> inputBoard, Set<Integer> setOfIndexInput){
+    public void countFitnessKromosom(BoardState kromosom, Hashtable<Integer, Integer> inputBoard,
+            Set<Integer> setOfIndexInput, int optimum) {
         float scoreKromosom = 0;
         for (int index : setOfIndexInput) {
-            scoreKromosom += countFitnessValue(inputBoard, index, kromosom);
+            scoreKromosom += countFitnessValue(inputBoard, index, kromosom, optimum);
         }
+
         kromosom.setFitness(scoreKromosom);
+
     }
 
     public BoardState[] rankSelection(BoardState[] population, int numSelections) {
@@ -76,7 +90,9 @@ public class Genetic {
         double totalFitness = 0.0;
         for (int i = 0; i < populationSize; i++) {
             totalFitness += population[i].getFitness();
+
         }
+
 
         for (int i = 0; i < populationSize; i++) {
             double probability = population[i].getFitness() / totalFitness;
@@ -102,8 +118,6 @@ public class Genetic {
     }
 
     public BoardState[] performCrossOver(int[] chromosome1, int[] chromosome2) {
-
-
 
         // Perform one-point crossover
         int crossoverPoint = (this.boardSize * this.boardSize) / 2;

@@ -53,6 +53,7 @@ public class BoardState {
             return 0;
         }
         int position = (currIndex) - this.boardSize;
+
         return this.board[position - 1];
     }
 
@@ -125,7 +126,7 @@ public class BoardState {
 
     // ------ method menguji tetangga yang valid ----------
     public boolean isValidNeighbourTop(int currIndex) {
-        if (currIndex < boardSize) {
+        if (currIndex <= boardSize) {
             return false;
         }
         return true;
@@ -146,7 +147,7 @@ public class BoardState {
     }
 
     public boolean isValidNeighbourBottom(int currIndex) {
-        if (currIndex >= (board.length - boardSize)) {
+        if (currIndex > (board.length - boardSize)) {
             return false;
         }
         return true;

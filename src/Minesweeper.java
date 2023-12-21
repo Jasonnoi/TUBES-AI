@@ -13,6 +13,22 @@ public class Minesweeper {
         return inputBoard;
     }
 
+    public static BoardState[] createEvolution(int boardSize, BoardState[] selectedPopulation,
+            Hashtable<Integer, Integer> inputBoard, Set<Integer> arrIndexValue) {
+        BoardState[] population = new BoardState[boardSize];
+        Genetic genetic = new Genetic(boardSize);
+
+        int[] arr = selectedPopulation[0].getBoard();
+        int[] arr2 = selectedPopulation[1].getBoard();
+
+        BoardState[] secondGenartion = genetic.performCrossOver(arr, arr2);
+        for (BoardState state : secondGenartion) {
+            genetic.countFitnessKromosom(state, inputBoard, arrIndexValue, 0);
+
+        }
+        population = secondGenartion;
+        return population;
+    }
 
     public static void main(String[] args) {
         System.out.println("Hello, World!");
@@ -29,28 +45,27 @@ public class Minesweeper {
 
         // Print the initial population
         for (BoardState boardState : population) {
-            genetic.countFitnessKromosom(boardState, inputBoard, arrIndexValue);
+            genetic.countFitnessKromosom(boardState, inputBoard, arrIndexValue, 0);
+        }
+        boolean cond = true;
+        int i = 0;
+        while (cond) {
+            BoardState[] selectedPopulation = genetic.rankSelection(population, 2);
+
+            for (BoardState boardState : population) {
+                if (boardState.getFitness() >= 10) {
+                    boardState.printBoard();
+                    System.out.println("KROMOSOM SCORE : " + boardState.getFitness());
+                    System.out.println("GENERASI KE " + i);
+                    cond = false;
+
+                }
+            }
+            i++;
+            population = createEvolution(boardSize, selectedPopulation, inputBoard, arrIndexValue);
         }
 
-        BoardState[] selectedPopulation = genetic.rankSelection(population, 2);
-        System.out.println();
         // Print the selected population after tournament selection
-
-        for (BoardState boardState : selectedPopulation) {
-            boardState.printBoard();
-            System.out.println("Score kromosom : " + boardState.getFitness());
-            System.out.println();
-        }
-
-        int[] arr = selectedPopulation[0].getBoard();
-        int[] arr2 = selectedPopulation[1].getBoard();
-        BoardState[] secondGenartion = genetic.performCrossOver(arr, arr2);
-        for (BoardState state : secondGenartion) {
-            genetic.countFitnessKromosom(state, inputBoard, arrIndexValue);
-            state.printBoard();
-            System.out.println("TOTAL KROMOSOM POINT " + state.getFitness());
-            System.out.println();
-        }
 
     }
 }
