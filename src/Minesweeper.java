@@ -50,12 +50,12 @@ public class Minesweeper {
         }
         boolean cond = true;
         int i = 0;
+        long startTime = System.currentTimeMillis();
         while (cond) {
-            long startTime = System.currentTimeMillis();
             BoardState[] selectedPopulation = genetic.rankSelection(population, 2);
 
             for (BoardState boardState : population) {
-                if (boardState.getFitness() >= 10) {
+                if (boardState.getFitness() >= 11) {
                     boardState.printBoard();
                     System.out.println("KROMOSOM SCORE : " + boardState.getFitness());
                     System.out.println("GENERASI KE " + i);

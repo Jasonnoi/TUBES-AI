@@ -121,10 +121,18 @@ public class Genetic {
     public BoardState[] performCrossOver(int[] chromosome1, int[] chromosome2) {
 
         // Perform one-point crossover
-        int crossoverPoint = this.boardSize / 4;
-        int crossoverPoint2 = (3 * this.boardSize) / 4;
+        int crossoverPoint = (this.boardSize * this.boardSize) / 2;
 
-        twoPointCrossover(chromosome1, chromosome2, crossoverPoint, crossoverPoint2);
+        // int crossoverPoint = this.boardSize / 4;
+        // int crossoverPoint2 = (3 * this.boardSize) / 4;
+
+        // int crossoverPoint2 = (3 * this.boardSize) / 8;
+        // int crossoverPoint3 = (5 * this.boardSize) / 8;
+
+        onePointCrossover(chromosome1, chromosome2, crossoverPoint);
+        // twoPointCrossover(chromosome1, chromosome2, crossoverPoint, crossoverPoint2);
+        // threePointCrossover(chromosome1, chromosome2, crossoverPoint, crossoverPoint2,
+        // crossoverPoint3);
 
         // Store children in an array
         int[][] childrenArray = new int[8][chromosome1.length];
@@ -157,6 +165,15 @@ public class Genetic {
     }
 
     // One-point crossover
+    public void onePointCrossover(int[] chromosome1, int[] chromosome2, int crossoverPoint) {
+        for (int i = crossoverPoint; i < chromosome1.length; i++) {
+            int temp = chromosome1[i];
+            chromosome1[i] = chromosome2[i];
+            chromosome2[i] = temp;
+        }
+    }
+
+    // Two-point crossover
     public void twoPointCrossover(int[] chromosome1, int[] chromosome2, int crossoverPoint,
             int crossoverPoint2) {
         if (crossoverPoint > crossoverPoint2) {
@@ -171,6 +188,48 @@ public class Genetic {
             chromosome2[i] = temp;
         }
     }
+
+    // Three-point crossover
+    public void threePointCrossover(int[] chromosome1, int[] chromosome2, int crossoverPoint1,
+            int crossoverPoint2, int crossoverPoint3) {
+
+        if (crossoverPoint1 > crossoverPoint2) {
+            int temp = crossoverPoint1;
+            crossoverPoint1 = crossoverPoint2;
+            crossoverPoint2 = temp;
+        }
+
+        if (crossoverPoint2 > crossoverPoint3) {
+            int temp = crossoverPoint2;
+            crossoverPoint2 = crossoverPoint3;
+            crossoverPoint3 = temp;
+        }
+
+        for (int i = 0; i < crossoverPoint1; i++) {
+            int temp = chromosome1[i];
+            chromosome1[i] = chromosome2[i];
+            chromosome2[i] = temp;
+        }
+
+        for (int i = crossoverPoint1; i <= crossoverPoint2; i++) {
+            int temp = chromosome1[i];
+            chromosome1[i] = chromosome2[i];
+            chromosome2[i] = temp;
+        }
+
+        for (int i = crossoverPoint2 + 1; i <= crossoverPoint3; i++) {
+            int temp = chromosome1[i];
+            chromosome1[i] = chromosome2[i];
+            chromosome2[i] = temp;
+        }
+
+        for (int i = crossoverPoint3 + 1; i < chromosome1.length; i++) {
+            int temp = chromosome1[i];
+            chromosome1[i] = chromosome2[i];
+            chromosome2[i] = temp;
+        }
+    }
+
 
     // Mutation
 
