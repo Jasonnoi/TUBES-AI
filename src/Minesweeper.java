@@ -52,7 +52,7 @@ public class Minesweeper {
         boolean cond = true;
         int i = 0;
         long startTime = System.currentTimeMillis();
-        long seed1 = 12;
+        long seed1 = 17;
         long seed2 = 23;
         while (cond) {
             BoardState[] selectedPopulation = genetic.rankSelection(population, 2, seed1);
@@ -66,14 +66,16 @@ public class Minesweeper {
                     long endTime = System.currentTimeMillis();
                     long elapsedTime = endTime - startTime;
                     System.out.println("Elapsed Time: " + elapsedTime + " milliseconds");
+                    System.out.println(seed2);
                     cond = false;
+
 
                 }
             }
             i++;
             population = createEvolution(boardSize, selectedPopulation, inputBoard, arrIndexValue, seed2);
             seed1++;
-            seed2++;
+            seed2 += 12;
         }
 
         // Print the selected population after tournament selection

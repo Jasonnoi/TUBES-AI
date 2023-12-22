@@ -130,15 +130,18 @@ public class Genetic {
 
         // Store children in an array
         int[][] childrenArray = new int[8][chromosome1.length];
-
+        long tmp = seed;
+        long realSeed = seed;
         // Per form mutation for 8 children
         for (int i = 0; i < 8; i++) {
-            Random random = new Random(seed);
+            Random random = new Random(tmp);
             int[] newChild = Arrays.copyOf(i % 2 == 0 ? chromosome1 : chromosome2, chromosome1.length);
             mutate(newChild, random.nextInt(newChild.length));
             childrenArray[i] = newChild;
-            seed /= 3;
-            seed *= 5;
+            tmp /= 3;
+            tmp *= 5;
+            realSeed++;
+            tmp = realSeed;
         }
 
         BoardState[] newPop = new BoardState[POPULATION_SIZE];
