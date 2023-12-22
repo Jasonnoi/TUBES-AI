@@ -37,6 +37,8 @@ public class Minesweeper {
         Hashtable<Integer, Integer> inputBoard = new Hashtable<>();
         inputBoard = inputBoardValue(inputBoard, boardSize);
         Set<Integer> arrIndexValue = inputBoard.keySet();
+        int solution = arrIndexValue.size();
+
         // Create an instance of the Genetic class
         Genetic genetic = new Genetic(boardSize);
 
@@ -50,13 +52,18 @@ public class Minesweeper {
         boolean cond = true;
         int i = 0;
         while (cond) {
+            long startTime = System.currentTimeMillis();
             BoardState[] selectedPopulation = genetic.rankSelection(population, 2);
 
             for (BoardState boardState : population) {
-                if (boardState.getFitness() >= 10) {
+                if (boardState.getFitness() >= solution) {
+                    System.out.println();
                     boardState.printBoard();
                     System.out.println("KROMOSOM SCORE : " + boardState.getFitness());
                     System.out.println("GENERASI KE " + i);
+                    long endTime = System.currentTimeMillis();
+                    long elapsedTime = endTime - startTime;
+                    System.out.println("Elapsed Time: " + elapsedTime + " milliseconds");
                     cond = false;
 
                 }
