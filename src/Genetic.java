@@ -5,7 +5,7 @@ import java.util.Set;
 // import java.lang.Math;
 
 public class Genetic {
-    private static final int POPULATION_SIZE = 10;
+    private static final int POPULATION_SIZE = 100;
     private int boardSize;
 
     public Genetic(int boardSize) {
@@ -123,13 +123,14 @@ public class Genetic {
         int crossoverPoint = (this.boardSize * this.boardSize) / 2;
 
         onePointCrossover(chromosome1, chromosome2, crossoverPoint);
+        int mutation = POPULATION_SIZE - 2;
 
         // Store children in an array
-        int[][] childrenArray = new int[8][chromosome1.length];
+        int[][] childrenArray = new int[mutation][chromosome1.length];
 
         // Per form mutation for 8 children
         Random random = new Random();
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < mutation; i++) {
             int[] newChild = Arrays.copyOf(i % 2 == 0 ? chromosome1 : chromosome2, chromosome1.length);
             mutate(newChild, random.nextInt(newChild.length));
             childrenArray[i] = newChild;
@@ -137,7 +138,7 @@ public class Genetic {
 
         BoardState[] newPop = new BoardState[POPULATION_SIZE];
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < mutation; i++) {
             BoardState newState = new BoardState(this.boardSize);
             newState.setBoard(childrenArray[i]);
             newPop[i] = newState;
@@ -146,8 +147,8 @@ public class Genetic {
         BoardState parent2 = new BoardState(this.boardSize);
         parent.setBoard(chromosome1);
         parent2.setBoard(chromosome2);
-        newPop[8] = parent;
-        newPop[9] = parent2;
+        newPop[POPULATION_SIZE - 2] = parent;
+        newPop[POPULATION_SIZE - 1] = parent2;
         return newPop;
     }
 
