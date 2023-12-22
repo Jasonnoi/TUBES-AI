@@ -1,6 +1,8 @@
 public class BoardState {
     private int boardSize;
     private int[] board;
+    private float fitness;
+    private double fitnessProbability; // New field for probability
 
     // ------ constructor ----------
     public BoardState(int boardSize) {
@@ -13,8 +15,34 @@ public class BoardState {
         board[index] = value;
 
     }
-    // GET SELF
 
+    public void setBoard(int[] board) {
+        this.board = board;
+    }
+
+    public int[] getBoard() {
+        return this.board;
+    }
+
+    public void setFitness(float fitness) {
+        this.fitness = fitness;
+    }
+
+    public float getFitness() {
+        return fitness;
+    }
+    
+    // Setter for fitness probability
+    public void setFitnessProbability(double probability) {
+        this.fitnessProbability = probability;
+    }
+
+    // Getter for fitness probability
+    public double getFitnessProbability() {
+        return fitnessProbability;
+    }
+    // GET SELF
+    
     public int getSelf(int index) {
         return this.board[index - 1];
     }
@@ -25,6 +53,7 @@ public class BoardState {
             return 0;
         }
         int position = (currIndex) - this.boardSize;
+
         return this.board[position - 1];
     }
 
@@ -97,7 +126,7 @@ public class BoardState {
 
     // ------ method menguji tetangga yang valid ----------
     public boolean isValidNeighbourTop(int currIndex) {
-        if (currIndex < boardSize) {
+        if (currIndex <= boardSize) {
             return false;
         }
         return true;
@@ -118,7 +147,7 @@ public class BoardState {
     }
 
     public boolean isValidNeighbourBottom(int currIndex) {
-        if (currIndex >= (board.length - boardSize)) {
+        if (currIndex > (board.length - boardSize)) {
             return false;
         }
         return true;
@@ -126,9 +155,11 @@ public class BoardState {
 
     // ------ method print isi board ----------
     public void printBoard() {
-        for (int i : this.board) {
-            System.out.print(i + " ");
+        for (int i = 0; i < this.boardSize; i++) {
+            for (int j = 0; j < this.boardSize; j++) {
+                System.out.print(board[i * this.boardSize + j] + " ");
+            }
+            System.out.println();
         }
-        System.out.println();
     }
 }
