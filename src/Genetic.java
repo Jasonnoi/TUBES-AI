@@ -137,6 +137,7 @@ public class Genetic {
             int[] newChild = Arrays.copyOf(i % 2 == 0 ? chromosome1 : chromosome2, chromosome1.length);
             mutate(newChild, random.nextInt(newChild.length));
             childrenArray[i] = newChild;
+            seed /= 3;
             seed *= 5;
         }
 
