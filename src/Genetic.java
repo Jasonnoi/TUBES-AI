@@ -12,17 +12,21 @@ public class Genetic {
         this.boardSize = boardSize;
     }
 
-    public BoardState[] initializePopulation() {
+    public BoardState[] initializePopulation(int solution) {
         BoardState[] population = new BoardState[POPULATION_SIZE];
+        long seed = (long) solution;
         for (int i = 0; i < POPULATION_SIZE; i++) {
-            population[i] = createRandomBoardState();
+
+            population[i] = createRandomBoardState(seed);
+            seed++;
+
         }
         return population;
     }
 
-    private BoardState createRandomBoardState() {
+    private BoardState createRandomBoardState(long seed) {
         BoardState boardState = new BoardState(this.boardSize);
-        Random random = new Random();
+        Random random = new Random(seed);
         int blackCells = (this.boardSize / 2) + 3;
         // Randomly set values for some cells (0 or 1)
         for (int i = 0; i < blackCells; i++) {
@@ -81,10 +85,10 @@ public class Genetic {
 
     }
 
-    public BoardState[] rankSelection(BoardState[] population, int numSelections) {
+    public BoardState[] rankSelection(BoardState[] population, int numSelections, long seed) {
         int populationSize = population.length;
         BoardState[] selectedPopulation = new BoardState[numSelections];
-        Random random = new Random();
+        Random random = new Random(seed);
 
         // Assign probabilities based on rank and fitness
         double totalFitness = 0.0;
@@ -117,7 +121,7 @@ public class Genetic {
         return selectedPopulation;
     }
 
-    public BoardState[] performCrossOver(int[] chromosome1, int[] chromosome2) {
+    public BoardState[] performCrossOver(int[] chromosome1, int[] chromosome2, long seed) {
 
         // Perform one-point crossover
         int crossoverPoint = (this.boardSize * this.boardSize) / 2;
@@ -128,7 +132,7 @@ public class Genetic {
         int[][] childrenArray = new int[8][chromosome1.length];
 
         // Per form mutation for 8 children
-        Random random = new Random();
+        Random random = new Random(seed);
         for (int i = 0; i < 8; i++) {
             int[] newChild = Arrays.copyOf(i % 2 == 0 ? chromosome1 : chromosome2, chromosome1.length);
             mutate(newChild, random.nextInt(newChild.length));

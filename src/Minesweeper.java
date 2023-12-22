@@ -14,14 +14,14 @@ public class Minesweeper {
     }
 
     public static BoardState[] createEvolution(int boardSize, BoardState[] selectedPopulation,
-            Hashtable<Integer, Integer> inputBoard, Set<Integer> arrIndexValue) {
+            Hashtable<Integer, Integer> inputBoard, Set<Integer> arrIndexValue, long seed) {
         BoardState[] population = new BoardState[boardSize];
         Genetic genetic = new Genetic(boardSize);
 
         int[] arr = selectedPopulation[0].getBoard();
         int[] arr2 = selectedPopulation[1].getBoard();
 
-        BoardState[] secondGenartion = genetic.performCrossOver(arr, arr2);
+        BoardState[] secondGenartion = genetic.performCrossOver(arr, arr2, seed);
         for (BoardState state : secondGenartion) {
             genetic.countFitnessKromosom(state, inputBoard, arrIndexValue, 0);
 
@@ -43,7 +43,7 @@ public class Minesweeper {
         Genetic genetic = new Genetic(boardSize);
 
         // Get the initial population of BoardState objects
-        BoardState[] population = genetic.initializePopulation();
+        BoardState[] population = genetic.initializePopulation(solution);
 
         // Print the initial population
         for (BoardState boardState : population) {
@@ -52,8 +52,10 @@ public class Minesweeper {
         boolean cond = true;
         int i = 0;
         long startTime = System.currentTimeMillis();
+        long seed1 = 12;
+        long seed2 = 23;
         while (cond) {
-            BoardState[] selectedPopulation = genetic.rankSelection(population, 2);
+            BoardState[] selectedPopulation = genetic.rankSelection(population, 2, seed1);
 
             for (BoardState boardState : population) {
                 if (boardState.getFitness() >= solution) {
@@ -69,7 +71,9 @@ public class Minesweeper {
                 }
             }
             i++;
-            population = createEvolution(boardSize, selectedPopulation, inputBoard, arrIndexValue);
+            population = createEvolution(boardSize, selectedPopulation, inputBoard, arrIndexValue, seed2);
+            seed1++;
+            seed2++;
         }
 
         // Print the selected population after tournament selection
