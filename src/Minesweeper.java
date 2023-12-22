@@ -3,7 +3,8 @@ import java.util.*;
 public class Minesweeper {
     private static final Scanner sc = new Scanner(System.in);
 
-    public static Hashtable<Integer, Integer> inputBoardValue(Hashtable<Integer, Integer> inputBoard, int boardSize) {
+    public static Hashtable<Integer, Integer> inputBoardValue(
+            Hashtable<Integer, Integer> inputBoard, int boardSize) {
         for (int i = 0; i < boardSize * boardSize; i++) {
             int value = sc.nextInt();
             if (value != -1) {
@@ -37,8 +38,6 @@ public class Minesweeper {
         Hashtable<Integer, Integer> inputBoard = new Hashtable<>();
         inputBoard = inputBoardValue(inputBoard, boardSize);
         Set<Integer> arrIndexValue = inputBoard.keySet();
-        int solution = arrIndexValue.size();
-
         // Create an instance of the Genetic class
         Genetic genetic = new Genetic(boardSize);
 
@@ -56,16 +55,14 @@ public class Minesweeper {
             BoardState[] selectedPopulation = genetic.rankSelection(population, 2);
 
             for (BoardState boardState : population) {
-                if (boardState.getFitness() >= solution) {
-                    System.out.println();
+                if (boardState.getFitness() >= 10) {
                     boardState.printBoard();
                     System.out.println("KROMOSOM SCORE : " + boardState.getFitness());
                     System.out.println("GENERASI KE " + i);
                     long endTime = System.currentTimeMillis();
-                    long elapsedTime = endTime - startTime;
-                    System.out.println("Elapsed Time: " + elapsedTime + " milliseconds");
+                    long estimateTime = endTime - startTime;
+                    System.out.println("estimate Time: " + estimateTime + " milliseconds");
                     cond = false;
-
                 }
             }
             i++;

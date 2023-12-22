@@ -34,11 +34,11 @@ public class Genetic {
     }
 
 
-    //menghitung ftsness dari setiap angka yg diketahui pada board
-    //dengan cara menghitung jumlah "kotak hitam" disekitar angka tsb termasuk dirinya
-    //lalu dibagi dengan angka tsb
-    private float countFitnessValue(Hashtable<Integer, Integer> inputBoard, int index, BoardState kromosom,
-            int optimum) {
+    // menghitung ftsness dari setiap angka yg diketahui pada board
+    // dengan cara menghitung jumlah "kotak hitam" disekitar angka tsb termasuk dirinya
+    // lalu dibagi dengan angka tsb
+    private float countFitnessValue(Hashtable<Integer, Integer> inputBoard, int index,
+            BoardState kromosom, int optimum) {
         float hasil = 0.1f;
         int valueIndex = inputBoard.get(index);
 
@@ -53,7 +53,8 @@ public class Genetic {
         int topRight = kromosom.getTopRight(index);
 
 
-        int sum = self + left + right + top + bottom + bottomLeft + bottomRight + topLeft + topRight;
+        int sum =
+                self + left + right + top + bottom + bottomLeft + bottomRight + topLeft + topRight;
         if (valueIndex == 0) {
             if (sum == 0) {
                 hasil = 1;
@@ -120,19 +121,23 @@ public class Genetic {
     public BoardState[] performCrossOver(int[] chromosome1, int[] chromosome2) {
 
         // Perform one-point crossover
-        int crossoverPoint = (this.boardSize * this.boardSize) / 2;
+        int crossoverPoint = this.boardSize / 4;
+        int crossoverPoint2 = (3 * this.boardSize) / 4;
 
-        onePointCrossover(chromosome1, chromosome2, crossoverPoint);
+        twoPointCrossover(chromosome1, chromosome2, crossoverPoint, crossoverPoint2);
 
         // Store children in an array
         int[][] childrenArray = new int[8][chromosome1.length];
 
         // Per form mutation for 8 children
         Random random = new Random();
+
         for (int i = 0; i < 8; i++) {
-            int[] newChild = Arrays.copyOf(i % 2 == 0 ? chromosome1 : chromosome2, chromosome1.length);
+            int[] newChild =
+                    Arrays.copyOf(i % 2 == 0 ? chromosome1 : chromosome2, chromosome1.length);
             mutate(newChild, random.nextInt(newChild.length));
             childrenArray[i] = newChild;
+
         }
 
         BoardState[] newPop = new BoardState[POPULATION_SIZE];
@@ -152,8 +157,15 @@ public class Genetic {
     }
 
     // One-point crossover
-    public void onePointCrossover(int[] chromosome1, int[] chromosome2, int crossoverPoint) {
-        for (int i = crossoverPoint; i < chromosome1.length; i++) {
+    public void twoPointCrossover(int[] chromosome1, int[] chromosome2, int crossoverPoint,
+            int crossoverPoint2) {
+        if (crossoverPoint > crossoverPoint2) {
+            int temp = crossoverPoint;
+            crossoverPoint = crossoverPoint2;
+            crossoverPoint2 = temp;
+        }
+
+        for (int i = crossoverPoint; i <= crossoverPoint2; i++) {
             int temp = chromosome1[i];
             chromosome1[i] = chromosome2[i];
             chromosome2[i] = temp;
