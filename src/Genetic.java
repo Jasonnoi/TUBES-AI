@@ -23,10 +23,10 @@ public class Genetic {
     private BoardState createRandomBoardState() {
         BoardState boardState = new BoardState(this.boardSize);
         Random random = new Random();
-
+        int blackCells = (this.boardSize / 2) + 3;
         // Randomly set values for some cells (0 or 1)
-        for (int i = 0; i < 15; i++) {
-            int index = random.nextInt(25);
+        for (int i = 0; i < blackCells; i++) {
+            int index = random.nextInt(this.boardSize * this.boardSize);
             boardState.setCell(index, 1);
         }
 

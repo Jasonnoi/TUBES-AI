@@ -51,8 +51,8 @@ public class Minesweeper {
         }
         boolean cond = true;
         int i = 0;
+        long startTime = System.currentTimeMillis();
         while (cond) {
-            long startTime = System.currentTimeMillis();
             BoardState[] selectedPopulation = genetic.rankSelection(population, 2);
 
             for (BoardState boardState : population) {
