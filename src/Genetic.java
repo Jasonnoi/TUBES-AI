@@ -129,24 +129,27 @@ public class Genetic {
         onePointCrossover(chromosome1, chromosome2, crossoverPoint);
 
         // Store children in an array
-        int[][] childrenArray = new int[8][chromosome1.length];
+        int mutation = POPULATION_SIZE - 2;
+
+        // Store children in an array
+        int[][] childrenArray = new int[mutation][chromosome1.length];
+
         long tmp = seed;
-        long realSeed = seed;
+        long uniqeseed = 3;
         // Per form mutation for 8 children
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < mutation; i++) {
             Random random = new Random(tmp);
             int[] newChild = Arrays.copyOf(i % 2 == 0 ? chromosome1 : chromosome2, chromosome1.length);
             mutate(newChild, random.nextInt(newChild.length));
             childrenArray[i] = newChild;
-            tmp /= 3;
-            tmp *= 5;
-            realSeed++;
-            tmp = realSeed;
+            tmp /= uniqeseed;
+            tmp = seed + uniqeseed;
+            uniqeseed += 3;
         }
 
         BoardState[] newPop = new BoardState[POPULATION_SIZE];
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < mutation; i++) {
             BoardState newState = new BoardState(this.boardSize);
             newState.setBoard(childrenArray[i]);
             newPop[i] = newState;
@@ -155,8 +158,8 @@ public class Genetic {
         BoardState parent2 = new BoardState(this.boardSize);
         parent.setBoard(chromosome1);
         parent2.setBoard(chromosome2);
-        newPop[8] = parent;
-        newPop[9] = parent2;
+        newPop[POPULATION_SIZE - 2] = parent;
+        newPop[POPULATION_SIZE - 1] = parent2;
         return newPop;
     }
 
