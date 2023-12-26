@@ -90,7 +90,6 @@ public class Genetic {
         BoardState[] selectedPopulation = new BoardState[numSelections];
         Random random = new Random(seed);
 
-        // Assign probabilities based on rank and fitness
         double totalFitness = 0.0;
         for (int i = 0; i < populationSize; i++) {
             totalFitness += population[i].getFitness();
