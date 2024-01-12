@@ -16,10 +16,8 @@ public class Genetic {
         BoardState[] population = new BoardState[POPULATION_SIZE];
         long seed = (long) solution;
         for (int i = 0; i < POPULATION_SIZE; i++) {
-
             population[i] = createRandomBoardState(seed);
             seed++;
-
         }
         return population;
     }
@@ -37,10 +35,10 @@ public class Genetic {
         return boardState;
     }
 
-
-    //menghitung ftsness dari setiap angka yg diketahui pada board
-    //dengan cara menghitung jumlah "kotak hitam" disekitar angka tsb termasuk dirinya
-    //lalu dibagi dengan angka tsb
+    // menghitung ftsness dari setiap angka yg diketahui pada board
+    // dengan cara menghitung jumlah "kotak hitam" disekitar angka tsb termasuk
+    // dirinya
+    // lalu dibagi dengan angka tsb
     private float countFitnessValue(Hashtable<Integer, Integer> inputBoard, int index, BoardState kromosom,
             int optimum) {
         float hasil = 0.1f;
@@ -55,7 +53,6 @@ public class Genetic {
         int bottomRight = kromosom.getBottomRight(index);
         int topLeft = kromosom.getTopLeft(index);
         int topRight = kromosom.getTopRight(index);
-
 
         int sum = self + left + right + top + bottom + bottomLeft + bottomRight + topLeft + topRight;
         if (valueIndex == 0) {
@@ -90,27 +87,35 @@ public class Genetic {
         BoardState[] selectedPopulation = new BoardState[numSelections];
         Random random = new Random(seed);
 
-        double totalFitness = 0.0;
-        for (int i = 0; i < populationSize; i++) {
-            totalFitness += population[i].getFitness();
+        // Array untuk menyimpan peringkat kebugaran
+        double[] fitnessRanks = new double[populationSize];
 
+        // Mengurutkan populasi berdasarkan kebugaran
+        Arrays.sort(population, (a, b) -> Double.compare(b.getFitness(), a.getFitness()));
+
+        // Memberikan peringkat berdasarkan urutan kebugaran
+        double totalRank = 0.0;
+        for (int i = 0; i < populationSize; i++) {
+            // Misalnya, gunakan peringkat linear
+            fitnessRanks[i] = populationSize - i;
+            totalRank += fitnessRanks[i];
         }
 
-
+        // Menghitung probabilitas seleksi berdasarkan peringkat
         for (int i = 0; i < populationSize; i++) {
-            double probability = population[i].getFitness() / totalFitness;
-            population[i].setFitnessProbability(probability);
+            fitnessRanks[i] /= totalRank;
         }
 
-        // Perform rank selection
+        // Mengakumulasikan probabilitas untuk roulette wheel
+        for (int i = 1; i < populationSize; i++) {
+            fitnessRanks[i] += fitnessRanks[i - 1];
+        }
+
+        // Melakukan seleksi
         for (int i = 0; i < numSelections; i++) {
-            double randomValue = random.nextDouble();
-            double cumulativeProbability = 0.0;
-
+            double rouletteSpin = random.nextDouble();
             for (int j = 0; j < populationSize; j++) {
-                cumulativeProbability += population[j].getFitnessProbability();
-
-                if (randomValue <= cumulativeProbability) {
+                if (rouletteSpin <= fitnessRanks[j]) {
                     selectedPopulation[i] = population[j];
                     break;
                 }
@@ -122,10 +127,14 @@ public class Genetic {
 
     public BoardState[] performCrossOver(int[] chromosome1, int[] chromosome2, long seed) {
 
-        // Perform one-point crossover
-        int crossoverPoint = (this.boardSize * this.boardSize) / 2;
+        long tmp = seed;
+        Random random = new Random(tmp);
+        int chromosomeLength = this.boardSize * this.boardSize;
 
-        onePointCrossover(chromosome1, chromosome2, crossoverPoint);
+        // Menentukan crossoverPoint1 dan crossoverPoint2
+        int crossoverPoint1 = random.nextInt(chromosomeLength);
+        int crossoverPoint2 = random.nextInt(chromosomeLength);
+        onePointCrossover(chromosome1, chromosome2, crossoverPoint1, crossoverPoint2);
 
         // Store children in an array
         int mutation = POPULATION_SIZE - 2;
@@ -133,11 +142,10 @@ public class Genetic {
         // Store children in an array
         int[][] childrenArray = new int[mutation][chromosome1.length];
 
-        long tmp = seed;
+
         long uniqeseed = 3;
         // Per form mutation for 8 children
         for (int i = 0; i < mutation; i++) {
-            Random random = new Random(tmp);
             int[] newChild = Arrays.copyOf(i % 2 == 0 ? chromosome1 : chromosome2, chromosome1.length);
             mutate(newChild, random.nextInt(newChild.length));
             childrenArray[i] = newChild;
@@ -163,8 +171,16 @@ public class Genetic {
     }
 
     // One-point crossover
-    public void onePointCrossover(int[] chromosome1, int[] chromosome2, int crossoverPoint) {
-        for (int i = crossoverPoint; i < chromosome1.length; i++) {
+    public void onePointCrossover(int[] chromosome1, int[] chromosome2, int crossoverPoint1, int crossoverPoint2) {
+        if (crossoverPoint1 > crossoverPoint2) {
+            // Tukar titik jika crossoverPoint1 lebih besar dari crossoverPoint2
+            int temp = crossoverPoint1;
+            crossoverPoint1 = crossoverPoint2;
+            crossoverPoint2 = temp;
+        }
+
+        for (int i = crossoverPoint1; i < crossoverPoint2; i++) {
+            // Menukar elemen antara dua titik crossover
             int temp = chromosome1[i];
             chromosome1[i] = chromosome2[i];
             chromosome2[i] = temp;
